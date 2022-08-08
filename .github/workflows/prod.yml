@@ -22,6 +22,11 @@ jobs:
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 5
+
+    - name: Hello Test
+      run: echo "hello Test"
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -67,7 +72,7 @@ jobs:
     #  run: terragrunt apply-all --terragrunt-non-interactive
     #  working-directory: 'prod'
 
-    - name: Terragrunt Destroy
+    #- name: Terragrunt Destroy
       #if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: terragrunt destroy-all --terragrunt-non-interactive
-      working-directory: 'prod'
+    #  run: terragrunt destroy-all --terragrunt-non-interactive
+    #  working-directory: 'prod'
