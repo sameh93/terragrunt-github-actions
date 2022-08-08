@@ -25,10 +25,8 @@ jobs:
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
 
-    - name: Hello Test 2
+    - name: Hello Test
       run: echo "hello Test"
 
     - name: Configure AWS credentials
