@@ -67,7 +67,6 @@ jobs:
     #  run: terragrunt apply-all --terragrunt-non-interactive
     #  working-directory: 'prod'
 
-    - name: Terragrunt Destroy
+    #- name: Terragrunt Destroy
       #if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: terragrunt destroy-all --terragrunt-non-interactive
-      working-directory: 'prod'
+    #  run: terragrunt destroy-all --terragrunt-non-interactive
