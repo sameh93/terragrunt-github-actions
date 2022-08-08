@@ -25,7 +25,7 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Hello Test
+    - name: Hello Test 2
       run: echo "hello Test"
 
     - name: Configure AWS credentials
