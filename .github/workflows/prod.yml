@@ -27,13 +27,21 @@ jobs:
       env:
         REGION: 'us-east-1'
       with:
-        aws-access-key-id: ${{ secrets.Dev_ACCOUNT_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.Dev_ACCOUNT_SECRET_ACCESS_KEY }}
+        aws-access-key-id: ${{ secrets.PROD_ACCOUNT_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.PROD_ACCOUNT_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.REGION }}
 
     # Install the latest version of Terragrunt CLI and configure the Terragrunt CLI configuration file with a Terragrunt Cloud user API token
     - name: Setup Terraform v1.2.6
       uses: hashicorp/setup-Terraform@v1
+      with:
+        terraform_version: 1.2.6
+        terraform_wrapper: false
+
+    - name: Setup Terraform version
+      run: terraform --version
+    - name: Setup Terraform wrapper path
+      run: which terraform
 
     - name: Setup Terragrunt v0.38.4
       run: |
