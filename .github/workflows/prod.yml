@@ -6,7 +6,6 @@ on:
       - prod
     types:
       - opened
-      - edited
 
 jobs:
   Terragrunt:
