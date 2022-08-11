@@ -58,3 +58,9 @@ jobs:
     - name: Terragrunt Plan
       run: terragrunt run-all plan --terragrunt-non-interactive
       working-directory: 'prod'
+
+    - name: Terragrunt Apply
+      #if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: terragrunt apply-all --terragrunt-non-interactive
+      working-directory: 'prod'
+      
