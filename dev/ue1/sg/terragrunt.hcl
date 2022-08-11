@@ -5,7 +5,6 @@ locals {
   tags = {
     env = "${local.env.env_name}"
     region = "${local.region.region_id}"
-    originated = "terragrunt"
   }
 
   # load provider data from provider.hcl to generate it after that
@@ -27,35 +26,22 @@ dependency "vpc" {
   To address this, you can provide mock outputs to use when a module hasn’t been applied yet. This is configured using the mock_outputs
   */
   mock_outputs = {
-    public_subnets = ["temporary-dummy-id", "temporary-dummy-id"]
-  }
-}
-
-dependency "sg" {
-  config_path = "../sg"
-
-  /*
-  you cannot actually fetch outputs out of an unapplied Terraform module, even if there are no resources being created in the module.
-  To address this, you can provide mock outputs to use when a module hasn’t been applied yet. This is configured using the mock_outputs
-  */
-  mock_outputs = {
-    security_group_id = "temporary-dummy-id"
+    vpc_id = "temporary-dummy-id"
   }
 }
 
 terraform {
-  source = "tfr:///terraform-aws-modules/ec2-instance/aws?version=4.1.1"
+  source = "tfr:///terraform-aws-modules/security-group/aws?version=4.9.0"
 }
 
 # Indicate the input values to use for the variables of the module.
 inputs = {
-  name                        = "test-from-terragrunt"
-  ami                         = "ami-0cff7528ff583bf9a"
-  instance_type               = "t2.micro"
-  availability_zone           = "us-east-1a"
-  subnet_id                   = element(dependency.vpc.outputs.public_subnets, 0)
-  vpc_security_group_ids      = [dependency.sg.outputs.security_group_id]
-  associate_public_ip_address = true
+  name        = "test-from-terragrunt-sg"
+  description = "Security group which is used as an argument in complete-sg"
+  vpc_id      = dependency.vpc.outputs.vpc_id
+
+  ingress_cidr_blocks = ["10.10.0.0/16"]
+  ingress_rules       = ["https-443-tcp"]
 
   tags = local.tags
 }

@@ -1,9 +1,6 @@
-name: 'Terraform Prod'
+name: 'Terragrunt against prod env'
 
 on:
-  #push:
-  #  branches:
-  #    - 'feature/test'
   pull_request:
     branches:    
       - prod
@@ -12,8 +9,8 @@ on:
       - reopened
 
 jobs:
-  Terragrunt:
-    name: 'Terragrunt'
+  Terragrunt-Plan:
+    name: 'Terragrunt Plan'
     runs-on: ubuntu-latest
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
@@ -25,9 +22,6 @@ jobs:
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v3
-
-    - name: Hello Test
-      run: echo "hello Test"
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -77,3 +71,55 @@ jobs:
       #if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     #  run: terragrunt destroy-all --terragrunt-non-interactive
     #  working-directory: 'prod'
+  Terragrunt-Apply:
+    name: 'Terragrunt Apply'
+    runs-on: ubuntu-latest
+    needs: Terragrunt-Plan
+    environment: prod
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      env:
+        REGION: 'us-east-1'
+      with:
+        aws-access-key-id: ${{ secrets.PROD_ACCOUNT_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.PROD_ACCOUNT_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.REGION }}
+
+    # Install the latest version of Terragrunt CLI and configure the Terragrunt CLI configuration file with a Terragrunt Cloud user API token
+    - name: Setup Terraform v1.2.6
+      uses: hashicorp/setup-Terraform@v1
+      with:
+        terraform_version: 1.2.6
+        terraform_wrapper: false
+
+    - name: Setup Terraform version
+      run: terraform --version
+    - name: Setup Terraform wrapper path
+      run: which terraform
+
+    - name: Setup Terragrunt v0.38.4
+      run: |
+        sudo wget -q -O /bin/terragrunt "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.4/terragrunt_linux_amd64"
+        sudo chmod +x /bin/terragrunt
+        terragrunt -v
+
+    # Initialize a new or existing Terragrunt working directory by creating initial files, loading any remote state, downloading modules, etc.
+    - name: Terragrunt Init
+      run: terragrunt run-all init --terragrunt-non-interactive
+      working-directory: 'prod'
+
+    - name: Terragrunt Apply
+      #if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: terragrunt apply-all --terragrunt-non-interactive
+      working-directory: 'prod'
