@@ -22,7 +22,8 @@ remote_state {
     if_exists = "overwrite"
   }
   config = {
-    bucket         = "github-actions-my-terragrunt-tf-state"
+    #bucket         = "github-actions-my-terragrunt-tf-state"
+    bucket         = "new-github-actions-my-terragrunt-tf-state"
     key            = "${path_relative_to_include()}/terraform.tfstate"
     region         = "us-east-1"
     encrypt        = true
