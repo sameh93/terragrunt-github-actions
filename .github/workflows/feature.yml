@@ -1,15 +1,11 @@
 name: 'Terraform Prod'
 
 on:
-  #push:
-  #  branches:
-  #    - 'feature/test'
-  pull_request:
-    branches:    
-      - prod
-    types:
-      - opened
-      - reopened
+  push:
+    branches:
+      - 'feature/*'
+    paths:
+      - 'prod/**'
 
 jobs:
   Terragrunt:
