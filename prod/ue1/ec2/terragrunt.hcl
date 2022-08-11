@@ -5,6 +5,7 @@ locals {
   tags = {
     env = "${local.env.env_name}"
     region = "${local.region.region_id}"
+    originated = "terragrunt"
   }
 
   # load provider data from provider.hcl to generate it after that
