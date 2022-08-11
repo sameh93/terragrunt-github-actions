@@ -1,4 +1,4 @@
-name: 'Terraform Prod'
+name: 'Terragrunt for feature branches against prod env'
 
 on:
   push:
@@ -21,9 +21,6 @@ jobs:
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v3
-
-    - name: Hello Test
-      run: echo "hello Test"
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -61,15 +58,3 @@ jobs:
     - name: Terragrunt Plan
       run: terragrunt run-all plan --terragrunt-non-interactive
       working-directory: 'prod'
-
-      # On push to main, build or change infrastructure according to Terragrunt configuration files
-      # Note: It is recommended to set up a required "strict" status check in your repository for "Terragrunt Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
-    #- name: Terragrunt Apply
-      #if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    #  run: terragrunt apply-all --terragrunt-non-interactive
-    #  working-directory: 'prod'
-
-    #- name: Terragrunt Destroy
-      #if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    #  run: terragrunt destroy-all --terragrunt-non-interactive
-    #  working-directory: 'prod'
