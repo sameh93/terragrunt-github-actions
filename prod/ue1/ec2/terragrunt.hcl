@@ -51,7 +51,7 @@ terraform {
 inputs = {
   name                        = "test-from-terragrunt"
   ami                         = "ami-0cff7528ff583bf9a"
-  instance_type               = "t2.micro"
+  instance_type               = "t2.small"
   availability_zone           = "us-east-1a"
   subnet_id                   = element(dependency.vpc.outputs.public_subnets, 0)
   vpc_security_group_ids      = [dependency.sg.outputs.security_group_id]
